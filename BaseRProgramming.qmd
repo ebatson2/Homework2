@@ -1,0 +1,137 @@
+---
+title: "Base R Programming"
+format: html
+editor: visual
+---
+
+# Task 1: Basic Vector Practice
+
+1.  Creating pre- and post-treatment Vectors:
+
+```{r}
+pre <- c(120, 151, 125, 126, 115, 132, 132, 129, 134, 139, 127, 122, 127, 135, 133, 128, 147, 138, 140, 132)
+
+post <- c(127, 145, 135, 122, 115, 122, 123, 126, 126, 129, 132, 146, 120, 114, 121, 120, 128, 120, 133, 115)
+```
+
+2.  Now generate and assign names to each:
+
+```{r}
+names <- paste("Subject", 1:20, sep = "_")
+
+names(pre) <- names
+names(post) <- names
+
+names(pre)
+```
+
+3.  Find **decrease** in blood pressure:
+
+```{r}
+dec <- pre-post
+
+dec
+```
+
+4.  Find the average **decrease** in blood pressure:
+
+```{r}
+ave_dec <- mean(dec)
+
+ave_dec
+```
+
+5.  Determine which patients experienced a decrease:
+
+```{r}
+which(dec > 0)
+```
+
+6.  Subset the vector of differences with only positive changes:
+
+```{r}
+pos_dec <- dec[dec>0]
+
+pos_dec
+```
+
+7.  Calculate average positive change:
+
+```{r}
+ave_pos_dec <- mean(pos_dec)
+
+ave_pos_dec
+```
+
+# Task 2: Basic Data Frame Practice
+
+1.  Create a df:
+
+```{r}
+df <- data.frame(patient=names(pre), pre_bp=pre, post_bp=post, diff_bp=dec, row.names=NULL)
+
+df
+```
+
+2.  Get only rows of *df* where change is negative:
+
+```{r}
+df[df$diff_bp<0,]
+```
+
+3.  Add new boolean column (*post_bp* \< 120):
+
+```{r}
+df$low_post_bp <- df$post_bp<120
+
+df
+```
+
+4.  Print df:
+
+```{r}
+knitr::kable(df)
+```
+
+# Task 3: List Practice
+
+1.  Create df with placebo treatment:
+
+```{r}
+placebo_pre <- c(138, 135, 147, 117, 152, 134, 114, 121, 131, 130)
+placebo_post <- c(105, 136, 123, 130, 134, 143, 135, 139, 120, 124)
+
+placebo_df <- data.frame(patient=paste("Subject", 1:10, sep = "_"),
+                         pre_bp=placebo_pre,
+                         post_bp=placebo_post,
+                         diff_bp=placebo_pre-placebo_post
+                         )
+
+placebo_df$low_post_bp <- placebo_df$post_bp<120
+
+placebo_df
+```
+
+2.  Create and store list containing each df:
+
+```{r}
+df_list <- list(treatment=df, placebo=placebo_df)
+
+df_list
+```
+
+3.  Access the first list element using 3 types of syntax:
+
+```{r}
+df_list[1]
+
+df_list[[1]]
+
+df_list$treatment
+```
+
+4.  Using the list from (2), access *pre_bp* column of placebo df in one line of code:
+
+```{r}
+df_list$placebo[, 2, drop=FALSE]
+```
